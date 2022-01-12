@@ -1,24 +1,20 @@
 import socket
+import sys
+import common_utils
 
-
-
-def client_conn(): 
+def client(): 
     try:
-        socketObj = socket.socket()
-        socketObj.connect(('localhost', 8002))
-        return socketObj
+        socket_obj = socket.socket()
+        socket_obj.connect((common_utils.config.get('socket','host'), int(common_utils.config.get('socket', 'port'))))
+        print(f"socket clinet is connected with : {common_utils.config.get('socket','host')}:{common_utils.config.get('socket','port')}")
+        return socket_obj
     except Exception as e: 
-        print ("Socket clinet connetion error")
+        error = common_utils.get_error_traceback(sys, e)
+        print (error)
 
 
 def test_client():
-    conn = True
-    while  conn:
-        msg = str(input("Entter your message : "))
-        client_conn().socketObj.send(msg.encode('utf-8'))
-        if msg == 'no':
-            conn = False
-            client_conn().socketObj.close
-
+    msg = str(input("Entter your message : "))
+    client().send(msg.encode('utf-8'))
 
 test_client()
